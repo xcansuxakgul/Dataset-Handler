@@ -1,6 +1,6 @@
 # Dataset Splitter and Reorganizer
 
-This project is designed to split a dataset into training, validation, and test sets and reorganize image files based on their class labels. The split proportions for each subset can be customized, and the images are moved into corresponding directories for easy access during model training and evaluation. This library used for especially classification tasks with state-of-arts model such as YOLOv8.
+This project is designed to split a dataset into training, validation, and test sets and reorganize image files based on their class labels. The split proportions for each subset can be customized, and the images are moved into corresponding directories for easy access during model training and evaluation. This library is particularly useful for classification tasks with state-of-the-art models such as YOLOv8.
 
 ## Features
 
@@ -28,10 +28,10 @@ pip install -r requirements.txt
 
 3. **Run the Script**:
     - Modify the script's parameters (such as `csv_path`, `source_dir`, and `target_dir`) as needed.
-    - Execute the script:
+    - Execute the script with the appropriate command-line arguments:
 
     ```bash
-    python main.py
+    python main.py your_csv_path your_train_path your_target_path --test_size 0.2 --val_size 0.1
     ```
 
 4. **Output**:
