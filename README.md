@@ -48,10 +48,9 @@ project/
 │
 ├── train.csv
 └── train/
-    └── train/
-        ├── img1.jpg
-        ├── img2.jpg
-        ├── ...
+    ├── img1.jpg
+    ├── img2.jpg
+    ├── ...
 ```
 
 After running the script:
