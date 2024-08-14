@@ -85,9 +85,9 @@ def reorganize_and_split_dataset(csv_path, source_dir, target_dir, test_size=0.2
         move_files(df, source_dir, split_dir)
 
 if __name__ == "__main__":
-    csv_path = 'train.csv'
-    source_dir = 'train/train'
-    target_dir = 'data/train'
+    csv_path = 'your_csv_path'
+    source_dir = 'your_train_path'
+    target_dir = 'your_target_path'
     
     # Execute the reorganization and dataset splitting process
     reorganize_and_split_dataset(csv_path, source_dir, target_dir, test_size=0.2, val_size=0.1)
