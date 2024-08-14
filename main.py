@@ -2,8 +2,9 @@ import os
 import shutil
 import pandas as pd
 from sklearn.model_selection import train_test_split
+import argparse
 
-def split_dataset(csv_path, test_size=0.2, val_size=0.1, random_state=42):
+def split_dataset(csv_path, test_size=0.2, val_size=0.1):
     """
     Splits the dataset into training, validation, and test sets.
 
@@ -11,29 +12,20 @@ def split_dataset(csv_path, test_size=0.2, val_size=0.1, random_state=42):
     - csv_path (str): Path to the CSV file containing the dataset information.
     - test_size (float): Proportion of the dataset to be used as the test set.
     - val_size (float): Proportion of the dataset to be used as the validation set.
-    - random_state (int): Seed used by the random number generator for reproducibility.
 
     Returns:
     - train_df (DataFrame): Training set DataFrame.
     - val_df (DataFrame): Validation set DataFrame.
     - test_df (DataFrame): Test set DataFrame.
     """
-    # Read the dataset from the CSV file
     df = pd.read_csv(csv_path)
-    
-    # Split the dataset into training+validation and test sets
     train_val_df, test_df = train_test_split(
-        df, test_size=test_size, stratify=df['prediction'], random_state=random_state
+        df, test_size=test_size
     )
-    
-    # Calculate the relative size of the validation set within the training+validation set
     val_relative_size = val_size / (1 - test_size)
-    
-    # Further split the training+validation set into training and validation sets
     train_df, val_df = train_test_split(
-        train_val_df, test_size=val_relative_size, stratify=train_val_df['prediction'], random_state=random_state
+        train_val_df, test_size=val_relative_size
     )
-    
     return train_df, val_df, test_df
 
 def move_files(df, source_dir, target_dir):
@@ -48,15 +40,9 @@ def move_files(df, source_dir, target_dir):
     for _, row in df.iterrows():
         img_id = row['id']
         prediction = str(row['prediction'])
-        
-        # Define the source and target paths for the image
         source_img_path = os.path.join(source_dir, img_id)
         target_class_dir = os.path.join(target_dir, prediction)
-        
-        # Create the target directory if it doesn't exist
         os.makedirs(target_class_dir, exist_ok=True)
-        
-        # Move the image if it exists, otherwise print a warning
         if os.path.exists(source_img_path):
             shutil.move(source_img_path, os.path.join(target_class_dir, img_id))
         else:
@@ -73,21 +59,26 @@ def reorganize_and_split_dataset(csv_path, source_dir, target_dir, test_size=0.2
     - test_size (float): Proportion of the dataset to be used as the test set.
     - val_size (float): Proportion of the dataset to be used as the validation set.
     """
-    # Split the dataset into training, validation, and test sets
     train_df, val_df, test_df = split_dataset(csv_path, test_size, val_size)
-    
-    # Dictionary to map each split to its corresponding DataFrame
     splits = {'train': train_df, 'val': val_df, 'test': test_df}
-    
-    # Move the files for each split
     for split, df in splits.items():
         split_dir = os.path.join(target_dir, split)
         move_files(df, source_dir, split_dir)
 
 if __name__ == "__main__":
-    csv_path = 'your_csv_path'
-    source_dir = 'your_train_path'
-    target_dir = 'your_target_path'
-    
-    # Execute the reorganization and dataset splitting process
-    reorganize_and_split_dataset(csv_path, source_dir, target_dir, test_size=0.2, val_size=0.1)
+    parser = argparse.ArgumentParser(description="Split and reorganize dataset.")
+    parser.add_argument('csv_path', type=str, help="Path to the CSV file containing the dataset information.")
+    parser.add_argument('source_dir', type=str, help="Directory containing the original images.")
+    parser.add_argument('target_dir', type=str, help="Base directory where the train, validation, and test directories will be created.")
+    parser.add_argument('--test_size', type=float, default=0.2, help="Proportion of the dataset to be used as the test set.")
+    parser.add_argument('--val_size', type=float, default=0.1, help="Proportion of the dataset to be used as the validation set.")
+
+    args = parser.parse_args()
+
+    reorganize_and_split_dataset(
+        csv_path=args.csv_path,
+        source_dir=args.source_dir,
+        target_dir=args.target_dir,
+        test_size=args.test_size,
+        val_size=args.val_size
+    )
