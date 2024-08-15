@@ -1,16 +1,17 @@
 # Dataset Splitter and Reorganizer
 
-This project is designed to split a dataset into training, validation, and test sets and reorganize image files based on their class labels. The split proportions for each subset can be customized, and the images are moved into corresponding directories for easy access during model training and evaluation. This library is particularly useful for classification tasks with state-of-the-art models such as YOLOv8.
+This project is designed to split a dataset into training, validation, and test sets and reorganize image files based on their class labels. The proportions for each subset can be customized, and the images are moved into corresponding directories for easy access during model training and evaluation. This library is particularly useful for classification tasks with state-of-the-art models such as YOLOv8.
 
 ## Features
 
 - **Split Dataset**: Splits the dataset into training, validation, and test sets using customizable proportions.
 - **Reorganize Files**: Moves image files into directories based on their class labels and subsets (train, val, test).
 - **Error Handling**: Notifies the user if an image file is missing during the moving process.
+- **Corrupted Image Detection**: Identifies and logs corrupted images in the dataset.
 
 ## Prerequisites
 
-You can install the required libraries using the following command:
+Install the required libraries using the following command:
 
 ```bash
 pip install -r requirements.txt
@@ -31,7 +32,7 @@ pip install -r requirements.txt
     - Execute the script with the appropriate command-line arguments:
 
     ```bash
-    python main.py your_csv_path your_train_path your_target_path --test_size 0.2 --val_size 0.1
+    python main.py your_csv_path your_source_dir your_target_dir --test_size 0.2 --val_size 0.1
     ```
 
 4. **Output**:
@@ -41,7 +42,7 @@ pip install -r requirements.txt
 
 ### Directory Structure
 
-Before running the script:
+**Before running the script:**
 
 ```
 project/
@@ -53,7 +54,7 @@ project/
     ├── ...
 ```
 
-After running the script:
+**After running the script:**
 
 ```
 project/
